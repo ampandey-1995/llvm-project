@@ -2886,6 +2886,24 @@ void CheckMPROTECT() {
 #  endif
 }
 
+#  if SANITIZER_AMDGPU
+void PatchHsaRuntimeDlopenFlag(const char* filename, int& flag) {
+  if (filename &&
+      (internal_strstr(filename, "libamdhip64.so") ||
+       internal_strstr(filename, "libhsa-runtime64.so") ||
+       internal_strstr(filename, "libamdocl64.so")) &&
+      !(flag & RTLD_GLOBAL)) {
+    flag |= RTLD_GLOBAL;
+    if (Verbosity() >= 2) {
+      Printf(
+          "RTLD_GLOBAL flag on dlopen call forced on for %s due to AMDGPU "
+          "device sanitizer runtime requirements.\n",
+          filename);
+    }
+  }
+}
+#  endif
+
 void OnDlOpen(const char *filename, int flag) {
 #  ifdef RTLD_DEEPBIND
   if (flag & RTLD_DEEPBIND) {
@@ -2898,6 +2916,10 @@ void OnDlOpen(const char *filename, int flag) {
         filename, filename);
     Die();
   }
+#  endif
+
+#  if SANITIZER_AMDGPU
+  PatchHsaRuntimeDlopenFlag(filename, flag);
 #  endif
 }
 
