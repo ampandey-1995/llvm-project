@@ -1533,7 +1533,7 @@ void DumpProcessMap() {
   Printf("End of module map.\n");
 }
 
-void OnDlOpen(const char *filename, int flag) {
+void OnDlOpen(const char* filename, int flag) {
   // Do nothing.
 }
 
