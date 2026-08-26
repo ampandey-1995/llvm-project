@@ -17,7 +17,7 @@
 // existing host allocator, without touching the base class shared by every
 // sanitizer. It is parameterized purely on the host allocator type (typically a
 // CombinedAllocator of primary + secondary, but any allocator exposing the same
-// interface works) and a DeviceAllocatorT (device backend, e.g. AMDGPU/HSA). It
+// interface works) and a DeviceAllocatorT (device backend, e.g. AMDHSA). It
 // re-exposes the host allocator's public surface, dispatching to the device
 // tier when a DeviceAllocationInfo is supplied (allocate) or when the pointer
 // belongs to the device heap (everything else), and delegating to the host
